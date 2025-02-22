@@ -1,66 +1,64 @@
-const Header = (props) => {
-  console.log(props)
+import { useState } from 'react'
+
+const Header = ({header}) =>{
   return(
-    <div>
-      <h1>{props.course}</h1>
+    <div style={{fontWeight:'bold'}}>
+      {header}
     </div>
   )
 }
 
-const Content = (props) => {
-  console.log(props)
+const Option = ({handleClick,text}) =>{
   return(
-    <div>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises}/>
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises}/>
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises}/>
+    <div style={{ display: 'inline-block', marginRight: '10px' }}>
+      <p><button onClick={handleClick}>{text}</button></p>
     </div>
   )
 }
 
-
-const Total = (props) => {
-  console.log(props)
+const Count =({text,count}) =>{
   return(
     <div>
-     <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+      <p>
+      {text} {count}
+      </p>
     </div>
   )
 }
 
-const Part = (props) => {
-  console.log(props)
-  return(
-    <div>
-      <p>{props.part} {props.exercises}</p>
-    </div>
-  )
-}
 
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+  const header1="give feedback"
+  const header2="statistics"
+  const text1="good"
+  const text2="neutral"
+  const text3="bad"
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const handleGoodClick = () =>{
+    setGood(good+1)
+  }
+
+  const handleBadClick = () =>{
+    setBad(bad+1)
+  }
+
+  const handleNeutralClick = () =>{
+    setNeutral(neutral+1)
   }
 
   return (
     <div>
-      <Header course={course.name}/>
-      <Content parts={course.parts}/>
-      <Total parts={course.parts}/>
+      <Header header={header1}/>
+      <Option handleClick={handleGoodClick} text={text1}/>
+      <Option handleClick={handleNeutralClick} text={text2}/>
+      <Option handleClick={handleBadClick} text={text3}/>
+      <Header header={header2}/> 
+      <Count count={good} text={text1}/> 
+      <Count count={neutral} text={text2}/> 
+      <Count count={bad} text={text3}/> 
     </div>
   )
 }
