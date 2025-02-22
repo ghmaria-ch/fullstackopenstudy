@@ -8,7 +8,7 @@ const Header = ({header}) =>{
   )
 }
 
-const Option = ({handleClick,text}) =>{
+const Button = ({handleClick,text}) =>{
   return(
     <div style={{ display: 'inline-block', marginRight: '10px' }}>
       <p><button onClick={handleClick}>{text}</button></p>
@@ -16,28 +16,28 @@ const Option = ({handleClick,text}) =>{
   )
 }
 
-const Count =({text,count}) =>{
-  return(
-    <div>
-      <p>
-      {text} {count}
-      </p>
-    </div>
-  )
-}
-
-
 
 const Statistics = ({good,bad,neutral}) =>{
   if(good===0 && bad===0 && neutral==0){
     return(
       <div>
-        no feedback give
+        <p>
+        no feedback given
+        </p>
       </div>
     )
   }
   return(
     <div>
+      <p>
+      good {good}
+      </p>
+      <p>
+      neutral {neutral}
+      </p>
+      <p>
+      bad {bad}
+      </p>
       <p>
       all {good+bad+neutral}
       </p>
@@ -50,6 +50,7 @@ const Statistics = ({good,bad,neutral}) =>{
     </div>
   )
 }
+  
 
 
 const App = () => {
@@ -79,13 +80,10 @@ const App = () => {
   return (
     <div>
       <Header header={header1}/>
-      <Option handleClick={handleGoodClick} text={text1}/>
-      <Option handleClick={handleNeutralClick} text={text2}/>
-      <Option handleClick={handleBadClick} text={text3}/>
+      <Button handleClick={handleGoodClick} text={text1}/>
+      <Button handleClick={handleNeutralClick} text={text2}/>
+      <Button handleClick={handleBadClick} text={text3}/>
       <Header header={header2}/> 
-      <Count count={good} text={text1}/> 
-      <Count count={neutral} text={text2}/> 
-      <Count count={bad} text={text3}/> 
       <Statistics good={good} bad={bad} neutral={neutral}/>
     </div>
   )
