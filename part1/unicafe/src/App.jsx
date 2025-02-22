@@ -26,34 +26,7 @@ const Count =({text,count}) =>{
   )
 }
 
-// const Total = ({total})=>{
-//   return(
-//     <div>
-//       all {total}
-//     </div>
-//   )
-// }
 
-// const Average = ({average}) =>{
-//   return(
-//     <div>
-//       <p>
-//       average {average}
-//       </p>
-//     </div>
-//   )
-// }
-
-
-// const Positive =({positive}) =>{
-//   return(
-//     <div>
-//       <p>
-//       positive {positive} %
-//       </p>
-//     </div>
-//   )
-// }
 
 const Statistics = ({good,bad,neutral}) =>{
   return(
@@ -95,9 +68,7 @@ const App = () => {
   }
 
  
-  // const total=good+bad+neutral
-  // const average=(good*1+bad*-1+neutral*0)/total
-  // const positive=(good/total)*100
+ 
   return (
     <div>
       <Header header={header1}/>
@@ -108,9 +79,6 @@ const App = () => {
       <Count count={good} text={text1}/> 
       <Count count={neutral} text={text2}/> 
       <Count count={bad} text={text3}/> 
-      {/* <Total total={total}/>
-      <Average average={average}/>
-      <Positive positive={positive}/> */}
       <Statistics good={good} bad={bad} neutral={neutral}/>
     </div>
   )
