@@ -29,6 +29,13 @@ const Count =({text,count}) =>{
 
 
 const Statistics = ({good,bad,neutral}) =>{
+  if(good===0 && bad===0 && neutral==0){
+    return(
+      <div>
+        no feedback give
+      </div>
+    )
+  }
   return(
     <div>
       <p>
