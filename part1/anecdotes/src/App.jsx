@@ -1,13 +1,6 @@
 import { useState } from 'react'
 
-const Anecdotegenerator =({text,anecdote,randomString})=>{
-  return(
-    <div>
-      <p>{anecdote}</p>
-      <button onClick={randomString}>{text}</button>
-    </div>
-  )
-}
+
 
 const App = () => {
   const anecdotes = [
@@ -20,18 +13,29 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+  const votes = [0, 0, 0, 0,0,0,0,0]
+  
   const [selected, setSelected] = useState(0)
-
+  const[vote,setVote]=useState(votes)
+  
   const randomString =()=>{
     const randomIndex=Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
   }
+  
+  const addVote=()=>{
+    const copy=[...vote]
+    copy[selected]+=1
+    setVote(copy)
+    }
 
 
   return (
     <div>
-      <Anecdotegenerator text="next anecdote" anecdote={anecdotes[selected]} randomString={randomString}/>
+      <p>{anecdotes[selected] }</p>
+      <p>has {vote[selected]} votes</p>
+      <button onClick={randomString}>next anecdote</button>
+      <button onClick={addVote}>vote</button>
     </div>
   )
 }
