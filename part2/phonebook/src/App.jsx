@@ -29,11 +29,12 @@ const PersonForm = ({addPerson,newName,newNumber,handleNameChange,handleNumberCh
   )
 }
 
-const Persons =({filteredNames})=>{
+
+const Persons =({filteredNames,deletePerson})=>{
   return(
     <ul>
         {filteredNames.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.name} person={person} deletePerson={deletePerson}/>
         ))}
       </ul>
   )
@@ -86,7 +87,6 @@ const App = () => {
       setNewName('')
       return
     }
-
     personService.create(personObject)
     .then(newPersons => {
       setPersons(persons.concat(newPersons))
@@ -94,9 +94,15 @@ const App = () => {
       setNewName('')
       setNewNumber('')
     })
+}
 
-    
-  }
+const deletePerson = (id) =>{
+  personService.remove(id)
+  .then(()=>{
+    setPersons(persons.filter(person=>person.id  !== id)),
+    setFilteredNames(filteredNames.filter(person=>person.id !== id))
+})
+}
 
   
 
@@ -107,7 +113,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons filteredNames={filteredNames}/>
+      <Persons filteredNames={filteredNames} deletePerson={deletePerson}/>
     </div>
   )
 }
