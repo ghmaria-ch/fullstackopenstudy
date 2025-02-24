@@ -1,6 +1,42 @@
 import { useState } from 'react'
 import Person from './components/Person'
 
+
+const Filter = ({filterName,handleFilterName}) => {
+  return (
+    <div>
+        filter shown with <input value={filterName} onChange={handleFilterName}/>
+    </div>
+  )
+}
+
+const PersonForm = ({addPerson,newName,newNumber,handleNameChange,handleNumberChange}) =>{
+  return(
+  <form onSubmit={addPerson}>
+        <div>
+          name: <input  value={newName} onChange={handleNameChange}/>
+          <br/>
+          <br/>
+          number: <input value={newNumber} onChange={handleNumberChange}/>
+        </div>
+          <br/>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+  )
+}
+
+const Persons =({filteredNames})=>{
+  return(
+    <ul>
+        {filteredNames.map((person) => (
+        <Person key={person.name} person={person} />
+        ))}
+      </ul>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -59,28 +95,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        filter shown with <input value={filterName} onChange={handleFilterName}/>
-      </div>
+      <Filter filterName={filterName} handleFilterName={handleFilterName}/>
       <h2>Add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input  value={newName} onChange={handleNameChange}/>
-          <br/>
-          <br/>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-          <br/>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <ul>
-        {filteredNames.map((person) => (
-        <Person key={person.name} person={person} />
-        ))}
-      </ul>
+      <Persons filteredNames={filteredNames}/>
     </div>
   )
 }
