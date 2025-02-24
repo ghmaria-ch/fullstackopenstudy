@@ -1,6 +1,7 @@
 import Person from './components/Person'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 
 const Filter = ({filterName,handleFilterName}) => {
@@ -47,12 +48,11 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
+    personService.getAll()
+      .then(initialPersons => {
         console.log('promise fulfilled')
-        setPersons(response.data)
-        setFilteredNames(response.data)
+        setPersons(initialPersons)
+        setFilteredNames(initialPersons)
       })
   }, [])
  
@@ -87,12 +87,10 @@ const App = () => {
       return
     }
 
-    axios
-    .post('http://localhost:3001/persons', personObject)
-    .then(response => {
-      console.log(response)
-      setPersons(persons.concat(response.data))
-      setFilteredNames(filteredNames.concat(response.data))
+    personService.create(personObject)
+    .then(newPersons => {
+      setPersons(persons.concat(newPersons))
+      setFilteredNames(filteredNames.concat(newPersons))
       setNewName('')
       setNewNumber('')
     })
