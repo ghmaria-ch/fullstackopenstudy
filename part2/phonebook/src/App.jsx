@@ -96,7 +96,11 @@ const App = () => {
     })
 }
 
-const deletePerson = (id) =>{
+const deletePerson = (id,name) =>{
+  const confirmDelete=window.confirm(`Delete ${name} ?`)
+  if(!confirmDelete){
+    return;
+  }
   personService.remove(id)
   .then(()=>{
     setPersons(persons.filter(person=>person.id  !== id)),
