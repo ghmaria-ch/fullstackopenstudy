@@ -79,7 +79,6 @@ const App = () => {
     const personObject={
       name:newName,
       number:newNumber,
-      id:(persons.length)+1
     }
     const nameExists=persons.some((person)=>person.name.toLowerCase()===newName.toLowerCase())
     if (nameExists){
@@ -87,10 +86,18 @@ const App = () => {
       setNewName('')
       return
     }
-    setPersons(persons.concat(personObject))
-    setFilteredNames(filteredNames.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+
+    axios
+    .post('http://localhost:3001/persons', personObject)
+    .then(response => {
+      console.log(response)
+      setPersons(persons.concat(response.data))
+      setFilteredNames(filteredNames.concat(response.data))
+      setNewName('')
+      setNewNumber('')
+    })
+
+    
   }
 
   
