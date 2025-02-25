@@ -1,7 +1,8 @@
 .message {
-    color: rgba(6, 4, 53, 0.816);
-    background: rgba(6, 4, 53, 0.289);
+    color: rgba(4, 3, 42, 0.816);
+    background: rgba(80, 79, 100, 0.289);
     font-size: 17px;
+    font-weight: bold;
     border-style: solid;
     border-radius: 5px;
     padding: 10px;

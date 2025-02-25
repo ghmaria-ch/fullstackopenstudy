@@ -40,7 +40,7 @@ const Persons =({filteredNames,deletePerson})=>{
   )
 }
 
-const Notification = ({message }) => {
+const Notification = ({ message }) => {
   return (
     <div className='message'>
       <p>
@@ -59,19 +59,15 @@ const App = () => {
   const [filteredNames,setFilteredNames] =useState([])
   const [message,setMessage] = useState('')
 
-  const hook =  () => {
+  useEffect(() => {
     console.log('effect')
     personService.getAll()
       .then(initialPersons => {
         console.log('promise fulfilled')
         setPersons(initialPersons)
         setFilteredNames(initialPersons)
-      }).catch(_error => 
-        {
-          alert("Display error")
-        })
-  }
-  useEffect(hook,[])
+      })
+  }, [])
  
 
   const handleNameChange =(event)=>{
@@ -91,39 +87,17 @@ const App = () => {
     setFilteredNames(filteredNames)
   }
 
-  const addPerson = (event,id) =>{
+  const addPerson = (event) =>{
     event.preventDefault()
     const personObject={
       name:newName,
       number:newNumber,
     }
-    const nameExists = persons.some((person) => person.name.toLowerCase() === newName.toLowerCase());
-
-    if (nameExists) {
-      const replace = window.confirm(`${newName} is already added to phonebook, replace the old number with the new one?`);
-      if (replace) {
-        const personToUpdate = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
-        personService.update(personObject, personToUpdate.id)
-          .then((updatedPerson) => {
-            setPersons(persons.map((person) =>
-              person.id !== personToUpdate.id ? person : updatedPerson
-            ));
-            setFilteredNames(persons.map((person) =>
-              person.id !== personToUpdate.id ? person : updatedPerson
-            ))
-            const successMessage = `Successfully updated ${updatedPerson.name}'s phone number`;
-            setMessage(successMessage);
-            setTimeout(() => {
-              setMessage(null);
-            }, 1800);
-          })
-          .catch((_error) => {
-            alert('Could not update the phonebook');
-          });
-      }
-      setNewName('');
-      setNewNumber('');
-      return;
+    const nameExists=persons.some((person)=>person.name.toLowerCase()===newName.toLowerCase())
+    if (nameExists){
+      alert(`${newName} is already added to phonebook`)
+      setNewName('')
+      return
     }
     personService.create(personObject)
     .then(newPersons => {
@@ -131,11 +105,8 @@ const App = () => {
       setFilteredNames(filteredNames.concat(newPersons))
       setNewName('')
       setNewNumber('')
-      const addMessage=`Successfully added ${newPersons.name} to phonebook`
-      setMessage(addMessage)
-      setTimeout(()=>{setMessage(null)},1800)}).catch(_error=>{
-        alert(`Could not add ${newPersons.name} to phonebook`)
-      })
+      setMessage(`Successfully added ${newPersons.name} to phonebook`)
+      setTimeout(()=>{setMessage(null)},1800)})
     }
 
 const deletePerson = (id,name) =>{
@@ -147,20 +118,8 @@ const deletePerson = (id,name) =>{
   .then(()=>{
     setPersons(persons.filter(person=>person.id  !== id)),
     setFilteredNames(filteredNames.filter(person=>person.id !== id))
-    const deleteMessage=`Successfully deleted ${name} from phonebook`
-    setMessage(deleteMessage)
-    setTimeout(()=>{setMessage(null)},1800)}).catch(_error=>{
-      alert(`Could not delete ${name} from phonebook`)
-    })
-}
-
-
-const removeCopy = (id,name) =>{
-  personService.remove(id)
-  .then(()=>{
-    setPersons(persons.filter(person=>person.id  !== id)),
-    setFilteredNames(filteredNames.filter(person=>person.id !== id))
-    })
+    setMessage(`Successfully deleted ${name} from phonebook`)
+    setTimeout(()=>{setMessage(null)},1800)})
 }
 
   
