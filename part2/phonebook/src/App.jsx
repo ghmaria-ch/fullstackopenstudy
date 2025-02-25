@@ -1,6 +1,6 @@
+
 import Person from './components/Person'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 
 
@@ -40,12 +40,24 @@ const Persons =({filteredNames,deletePerson})=>{
   )
 }
 
+const Notification = ({ message }) => {
+  return (
+    <div className='message'>
+      <p>
+      {message}
+      </p>
+    </div>
+  )
+}
+
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber,setNewNumber] = useState('')
   const [filterName,setFilterName] = useState('')
   const [filteredNames,setFilteredNames] =useState([])
+  const [message,setMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -93,8 +105,9 @@ const App = () => {
       setFilteredNames(filteredNames.concat(newPersons))
       setNewName('')
       setNewNumber('')
-    })
-}
+      setMessage(`Successfully added ${newPersons.name} to phonebook`)
+      setTimeout(()=>{setMessage(null)},1800)})
+    }
 
 const deletePerson = (id,name) =>{
   const confirmDelete=window.confirm(`Delete ${name} ?`)
@@ -105,7 +118,8 @@ const deletePerson = (id,name) =>{
   .then(()=>{
     setPersons(persons.filter(person=>person.id  !== id)),
     setFilteredNames(filteredNames.filter(person=>person.id !== id))
-})
+    setMessage(`Successfully deleted ${name} from phonebook`)
+    setTimeout(()=>{setMessage(null)},1800)})
 }
 
   
@@ -113,6 +127,7 @@ const deletePerson = (id,name) =>{
   return (
     <div>
       <h2>Phonebook</h2>
+      {message && <Notification message={message}/>}
       <Filter filterName={filterName} handleFilterName={handleFilterName}/>
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
