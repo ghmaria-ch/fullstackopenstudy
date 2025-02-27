@@ -1,140 +1,82 @@
-
-import Person from './components/Person'
-import { useState, useEffect } from 'react'
-import personService from './services/persons'
+import { useState,useEffect } from "react"
+import axios from 'axios'
 
 
-const Filter = ({filterName,handleFilterName}) => {
+const Filter = ({search,handleSearchChange}) => {
+    
   return (
     <div>
-        filter shown with <input value={filterName} onChange={handleFilterName}/>
-    </div>
-  )
-}
-
-const PersonForm = ({addPerson,newName,newNumber,handleNameChange,handleNumberChange}) =>{
-  return(
-  <form onSubmit={addPerson}>
-        <div>
-          name: <input  value={newName} onChange={handleNameChange}/>
-          <br/>
-          <br/>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-          <br/>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-  )
-}
-
-
-const Persons =({filteredNames,deletePerson})=>{
-  return(
-    <ul>
-        {filteredNames.map((person) => (
-        <Person key={person.name} person={person} deletePerson={deletePerson}/>
-        ))}
-      </ul>
-  )
-}
-
-const Notification = ({ message }) => {
-  return (
-    <div className='message'>
-      <p>
-      {message}
-      </p>
+      find countries <input value={search} onChange={handleSearchChange}/>
     </div>
   )
 }
 
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
-  const [newName, setNewName] = useState('')
-  const [newNumber,setNewNumber] = useState('')
-  const [filterName,setFilterName] = useState('')
-  const [filteredNames,setFilteredNames] =useState([])
-  const [message,setMessage] = useState('')
+  const [search,setSearch]=useState('')
+  const [countries,setCountries]=useState([])
+  const [filteredCountries,setFilteredCountries]=useState([])
 
   useEffect(() => {
+    setFilteredCountries(countries.filter(country =>
+      country.name.common.toLowerCase().includes(search.toLowerCase())
+    ));
+  }, [search]);
+
+  const renderContent = (filteredCountries) => {
+    if (filteredCountries.length > 10) {
+      return <p>Too many matches, specify another filter</p>;
+    } 
+    else if (filteredCountries.length === 1) {
+      const country = filteredCountries[0];
+      return (
+        <div>
+          <h2>{country.name.common}</h2>
+          <p>Capital: {country.capital}</p>
+          <p>Population: {country.population}</p>
+          <h3>Languages</h3>
+          <ul>
+            {Object.values(country.languages).map((language, index) => (
+              <li key={index}>{language}</li>
+            ))}
+          </ul>
+          <img src={country.flags.png} alt={country.name.common} width="100" height="100" />
+        </div>
+      );
+    } 
+    else {
+      return filteredCountries.map(country => (
+        <li key={country.cca3}>{country.name.common}</li>
+      ));
+    }
+  };
+
+  useEffect (() => {
     console.log('effect')
-    personService.getAll()
-      .then(initialPersons => {
-        console.log('promise fulfilled')
-        setPersons(initialPersons)
-        setFilteredNames(initialPersons)
+    axios
+      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+      .then(response => {
+        setCountries(response.data)      
       })
   }, [])
- 
-
-  const handleNameChange =(event)=>{
-    console.log(event.target.value)
-    setNewName(event.target.value)
-  }
-
-  const handleNumberChange =(event)=>{
-    console.log(event.target.value)
-    setNewNumber(event.target.value)
-  }
-  const handleFilterName =(event)=>{
-    console.log(event.target.value)
-    setFilterName(event.target.value)
-
-    const filteredNames=persons.filter((person)=>person.name.toLowerCase().includes(event.target.value.toLowerCase()))
-    setFilteredNames(filteredNames)
-  }
-
-  const addPerson = (event) =>{
-    event.preventDefault()
-    const personObject={
-      name:newName,
-      number:newNumber,
-    }
-    const nameExists=persons.some((person)=>person.name.toLowerCase()===newName.toLowerCase())
-    if (nameExists){
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
-      return
-    }
-    personService.create(personObject)
-    .then(newPersons => {
-      setPersons(persons.concat(newPersons))
-      setFilteredNames(filteredNames.concat(newPersons))
-      setNewName('')
-      setNewNumber('')
-      setMessage(`Successfully added ${newPersons.name} to phonebook`)
-      setTimeout(()=>{setMessage(null)},1800)})
-    }
-
-const deletePerson = (id,name) =>{
-  const confirmDelete=window.confirm(`Delete ${name} ?`)
-  if(!confirmDelete){
-    return;
-  }
-  personService.remove(id)
-  .then(()=>{
-    setPersons(persons.filter(person=>person.id  !== id)),
-    setFilteredNames(filteredNames.filter(person=>person.id !== id))
-    setMessage(`Successfully deleted ${name} from phonebook`)
-    setTimeout(()=>{setMessage(null)},1800)})
-}
-
   
+  
+ 
+  
+  const handleSearchChange = (event) =>{
+    setSearch(event.target.value)
+  }
+  console.log(search)
 
   return (
-    <div>
-      <h2>Phonebook</h2>
-      {message && <Notification message={message}/>}
-      <Filter filterName={filterName} handleFilterName={handleFilterName}/>
-      <h2>Add a new</h2>
-      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}/>
-      <h2>Numbers</h2>
-      <Persons filteredNames={filteredNames} deletePerson={deletePerson}/>
-    </div>
-  )
+    <>
+      <div>
+        <Filter handleSearchChange={handleSearchChange} search={search} />
+       {renderContent(filteredCountries)}
+      </div>
+      </>
+  );
+
 }
 
-export default App
+export default App;

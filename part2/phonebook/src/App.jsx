@@ -91,7 +91,7 @@ const App = () => {
     setFilteredNames(filteredNames)
   }
 
-  const addPerson = (event,id) =>{
+  const addPerson = (event) =>{
     event.preventDefault()
     const personObject={
       name:newName,
@@ -155,13 +155,7 @@ const deletePerson = (id,name) =>{
 }
 
 
-const removeCopy = (id,name) =>{
-  personService.remove(id)
-  .then(()=>{
-    setPersons(persons.filter(person=>person.id  !== id)),
-    setFilteredNames(filteredNames.filter(person=>person.id !== id))
-    })
-}
+
 
   
 
