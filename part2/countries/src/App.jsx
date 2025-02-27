@@ -16,7 +16,7 @@ const App = () => {
   const [search,setSearch]=useState('')
   const [countries,setCountries]=useState([])
   const [filteredCountries,setFilteredCountries]=useState([])
-
+ 
   useEffect(() => {
     setFilteredCountries(countries.filter(country =>
       country.name.common.toLowerCase().includes(search.toLowerCase())
@@ -45,9 +45,16 @@ const App = () => {
       );
     } 
     else {
-      return filteredCountries.map(country => (
-        <li key={country.cca3}>{country.name.common}</li>
-      ));
+      return (
+        <div>
+        {filteredCountries.map(country => (
+        <li key={country.cca3}>{country.name.common} <button onClick={() => setSearch(country.name.common)}>show</button>  
+</li>
+        )
+        )} 
+        </div>
+        )
+      ;
     }
   };
 
